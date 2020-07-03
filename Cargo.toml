@@ -14,3 +14,7 @@ url = "2.1.1"
 percent-encoding = "2.1.0"
 opener = "0.4"
 
+[build-dependencies]
+zip = "0.5"
+walkdir = "2"
+
