@@ -7,14 +7,18 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-zip = "0.5"
-tiny_http = "0.7"
-mime_guess = "2"
-url = "2.1.1"
-percent-encoding = "2.1.0"
-opener = "0.4"
+zip = { version = "0.5", optional = true }
+tiny_http = { version = "0.7", optional = true }
+mime_guess = { version = "2", optional = true }
+url = { version = "2.1.1", optional = true }
+percent-encoding = { version = "2.1.0", optional = true }
+opener = { version = "0.4", optional = true }
 
 [build-dependencies]
-zip = "0.5"
-walkdir = "2"
+zip = { version = "0.5", optional = true }
+walkdir = { version = "2", optional = true }
+
+[features]
+default = ["docs"]
+docs = ["zip", "tiny_http", "mime_guess", "url", "percent-encoding", "opener", "walkdir"]
 

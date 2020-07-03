@@ -1,8 +1,9 @@
-use std::process::Command;
-use walkdir::WalkDir;
-use zip::{write::FileOptions, ZipWriter};
-
+#[cfg(feature = "docs")]
 fn main() {
+    use std::process::Command;
+    use walkdir::WalkDir;
+    use zip::{write::FileOptions, ZipWriter};
+
     println!("cargo:rerun-if-changed=docs/src");
 
     let mdbook_result = Command::new("mdbook")
@@ -41,3 +42,7 @@ fn main() {
         .finish()
         .expect("Could not finish zip file. So close");
 }
+
+#[cfg(not(feature = "docs"))]
+fn main() {}
+

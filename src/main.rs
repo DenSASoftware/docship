@@ -1,12 +1,13 @@
-use percent_encoding::percent_decode_str;
-use std::io::{Cursor, Read};
-use tiny_http::{Method, Request, Response};
-use url::Url;
-use zip::read::ZipArchive;
+#[cfg(feature = "docs")]
+fn run_help_server() {
+    use percent_encoding::percent_decode_str;
+    use std::io::{Cursor, Read};
+    use tiny_http::{Method, Request, Response};
+    use url::Url;
+    use zip::read::ZipArchive;
 
-const DOCS: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/docs.zip"));
+    const DOCS: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/docs.zip"));
 
-fn main() {
     let mut archive = ZipArchive::new(Cursor::new(DOCS)).expect("Could not open zip file");
     let server =
         tiny_http::Server::http("127.0.0.1:10101").expect("Could not listen on localhost:10101");
@@ -63,3 +64,9 @@ fn main() {
         }
     }
 }
+
+fn main() {
+    #[cfg(feature = "docs")]
+    run_help_server();
+}
+
