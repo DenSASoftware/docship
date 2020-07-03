@@ -1,5 +1,5 @@
 [package]
-name = "hq"
+name = "docship"
 version = "0.1.0"
 authors = ["DenSASoftware <social@densa.software>"]
 edition = "2018"
