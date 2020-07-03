@@ -6,6 +6,10 @@ const DOCS: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/docs.zip"));
 fn main() {
     let mut archive = ZipArchive::new(Cursor::new(DOCS)).unwrap();
     let server = tiny_http::Server::http("0.0.0.0:10101").unwrap();
+
+    std::thread::spawn(|| {
+        opener::open("http://localhost:10101/").unwrap();
+    });
     for request in server.incoming_requests() {
         if *request.method() != tiny_http::Method::Get {
             request.respond(tiny_http::Response::from_string("").with_status_code(405)).unwrap();
@@ -29,7 +33,7 @@ fn main() {
                     )).unwrap();
                 },
                 Err(zip::result::ZipError::FileNotFound) => {
-                    request.respond(tiny_http::Response::from_string("").with_status_code(200)).unwrap();
+                    request.respond(tiny_http::Response::from_string("").with_status_code(404)).unwrap();
                 },
                 _ => panic!(),
             }

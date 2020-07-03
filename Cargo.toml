@@ -12,4 +12,5 @@ tiny_http = "0.7"
 mime_guess = "2"
 url = "2.1.1"
 percent-encoding = "2.1.0"
+opener = "0.4"
 
