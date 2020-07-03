@@ -30,7 +30,7 @@ fn main() {
                 file.strip_prefix("docs/book").unwrap_or(file),
                 FileOptions::default().compression_method(zip::CompressionMethod::Deflated),
             )
-            .unwrap();
+            .expect(&format!("Could not start writing file {:?}", file));
 
         std::io::copy(&mut std::fs::File::open(file).unwrap(), &mut archive)
             .expect(&format!("Writing {:?} to zip file failed", file));
