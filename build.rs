@@ -3,7 +3,7 @@ use walkdir::WalkDir;
 use zip::{ZipWriter, write::FileOptions};
 
 fn main() {
-    println!("cargo:rerun-if-changed=docs");
+    println!("cargo:rerun-if-changed=docs/src");
 
     let mdbook_result = Command::new("mdbook").args(&["build", "docs"]).status().expect("could not execute mdbook");
     if !mdbook_result.success() {
@@ -13,14 +13,15 @@ fn main() {
     let out_dir = std::env::var_os("OUT_DIR").unwrap();
     let dest_path = std::path::Path::new(&out_dir).join("docs.zip");
 
-    let files = WalkDir::new("docs/book").into_iter().collect::<Result<Vec<_>, _>>();
-    let mut archive = ZipWriter::new(std::fs::File::create(dest_path).unwrap());
-    for file in files.unwrap().into_iter().filter(|e| e.file_type().is_file()) {
-        archive.start_file_from_path(file.path().strip_prefix("docs/book").unwrap_or(file.path()), FileOptions::default().compression_method(zip::CompressionMethod::Deflated)).unwrap();
+    let files = WalkDir::new("docs/book").into_iter().collect::<Result<Vec<_>, _>>().expect("Could not get full path list of docs/book/");
+    let mut archive = ZipWriter::new(std::fs::File::create(&dest_path).expect(&format!("Could not create file {:?}", dest_path)));
+    for entry in files.into_iter().filter(|e| e.file_type().is_file()) {
+        let file = entry.path();
+        archive.start_file_from_path(file.strip_prefix("docs/book").unwrap_or(file), FileOptions::default().compression_method(zip::CompressionMethod::Deflated)).unwrap();
         
-        std::io::copy(&mut std::fs::File::open(file.path()).unwrap(), &mut archive);
+        std::io::copy(&mut std::fs::File::open(file).unwrap(), &mut archive).expect(&format!("Writing {:?} to zip file failed", file));
     }
 
-    archive.finish().unwrap();
+    archive.finish().expect("Could not finish zip file. So close");
 }
 

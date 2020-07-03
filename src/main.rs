@@ -23,7 +23,6 @@ fn main() {
 
             match archive.by_name(&path.trim_start_matches("/")) {
                 Ok(file) => {
-
                     request.respond(tiny_http::Response::new(
                         (200).into(),
                         vec![tiny_http::Header::from_bytes("content-type", mime_guess::from_path(path.as_ref()).first_or(mime_guess::mime::TEXT_PLAIN).as_ref()).unwrap()],
