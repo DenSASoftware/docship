@@ -1,0 +1,6 @@
+[book]
+authors = ["zero"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Test documentation"
