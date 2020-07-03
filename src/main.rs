@@ -35,15 +35,15 @@ struct Nums {
 fn run_help_server(opts: HelpOptions) {
     use percent_encoding::percent_decode_str;
     use std::io::{Cursor, Read};
-    use tiny_http::{Method, Request, Response};
+    use tiny_http::{Method, Request, Response, Server};
     use url::Url;
     use zip::read::ZipArchive;
 
     const DOCS: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/docs.zip"));
 
     let mut archive = ZipArchive::new(Cursor::new(DOCS)).expect("Could not open zip file");
-    let server =
-        tiny_http::Server::http("127.0.0.1:10101").expect("Could not listen on localhost:10101");
+    let server = Server::http("127.0.0.1:10101").expect("Could not listen on localhost:10101");
+    println!("Server is running at 127.0.0.1:10101");
 
     if opts.open_browser {
         std::thread::spawn(|| {
