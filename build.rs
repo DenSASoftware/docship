@@ -21,7 +21,8 @@ fn main() {
         .collect::<Result<Vec<_>, _>>()
         .expect("Could not get full path list of docs/book/");
     let mut archive = ZipWriter::new(
-        std::fs::File::create(&dest_path).expect(&format!("Could not create file {:?}", dest_path)),
+        std::fs::File::create(&dest_path)
+            .unwrap_or_else(|_| panic!("Could not create file {:?}", dest_path)),
     );
     for entry in files.into_iter().filter(|e| e.file_type().is_file()) {
         let file = entry.path();
@@ -30,10 +31,10 @@ fn main() {
                 file.strip_prefix("docs/book").unwrap_or(file),
                 FileOptions::default().compression_method(zip::CompressionMethod::Deflated),
             )
-            .expect(&format!("Could not start writing file {:?}", file));
+            .unwrap_or_else(|_| panic!("Could not start writing file {:?}", file));
 
         std::io::copy(&mut std::fs::File::open(file).unwrap(), &mut archive)
-            .expect(&format!("Writing {:?} to zip file failed", file));
+            .unwrap_or_else(|_| panic!("Writing {:?} to zip file failed", file));
     }
 
     archive

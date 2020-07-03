@@ -29,11 +29,11 @@ fn main() {
             let req = Url::parse(&format!("http://a/{}", request.url())).unwrap();
             let mut path = percent_decode_str(req.path()).decode_utf8_lossy();
 
-            if path.ends_with("/") {
+            if path.ends_with('/') {
                 path += "index.html";
             }
 
-            match archive.by_name(&path.trim_start_matches("/")) {
+            match archive.by_name(&path.trim_start_matches('/')) {
                 Ok(file) => {
                     let mime_type =
                         mime_guess::from_path(path.as_ref()).first_or(mime_guess::mime::TEXT_PLAIN);
