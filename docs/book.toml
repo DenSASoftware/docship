@@ -1,6 +1,6 @@
 [book]
-authors = ["zero"]
+authors = ["DenSASoftware"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Test documentation"
+title = "docship docs"

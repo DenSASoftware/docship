@@ -107,6 +107,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "docship"
+version = "0.1.0"
+dependencies = [
+ "argh",
+ "mime_guess",
+ "opener",
+ "percent-encoding",
+ "tiny_http",
+ "url",
+ "walkdir",
+ "zip",
+]
+
+[[package]]
 name = "flate2"
 version = "1.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -125,20 +139,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20564e78d53d2bb135c343b3f47714a56af2061f1c928fdb541dc7b9fdd94205"
 dependencies = [
  "unicode-segmentation",
-]
-
-[[package]]
-name = "hq"
-version = "0.1.0"
-dependencies = [
- "argh",
- "mime_guess",
- "opener",
- "percent-encoding",
- "tiny_http",
- "url",
- "walkdir",
- "zip",
 ]
 
 [[package]]
