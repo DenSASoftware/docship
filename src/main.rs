@@ -1,5 +1,38 @@
+use argh::FromArgs;
+
+#[derive(FromArgs)]
+#[argh(description = "my documentation example program")]
+struct Opts {
+    #[argh(subcommand)]
+    cmd: SubCommand,
+}
+
+#[derive(FromArgs)]
+#[argh(subcommand)]
+enum SubCommand {
+    Add(Nums),
+    #[cfg(feature = "docs")]
+    Help(HelpOptions),
+}
+
+#[derive(FromArgs)]
+#[argh(subcommand, name = "open-help", description = "open the help pages in the browser")]
+struct HelpOptions {
+    #[argh(option, default = "true", description = "open the browser")]
+    open_browser: bool,
+}
+
+#[derive(FromArgs)]
+#[argh(subcommand, name = "add", description = "add two numbers")]
+struct Nums {
+    #[argh(positional)]
+    a: i32,
+    #[argh(positional)]
+    b: i32,
+}
+
 #[cfg(feature = "docs")]
-fn run_help_server() {
+fn run_help_server(opts: HelpOptions) {
     use percent_encoding::percent_decode_str;
     use std::io::{Cursor, Read};
     use tiny_http::{Method, Request, Response};
@@ -12,10 +45,12 @@ fn run_help_server() {
     let server =
         tiny_http::Server::http("127.0.0.1:10101").expect("Could not listen on localhost:10101");
 
-    std::thread::spawn(|| {
-        opener::open("http://localhost:10101/")
-            .expect("Could not open the browser, the server is still running though")
-    });
+    if opts.open_browser {
+        std::thread::spawn(|| {
+            opener::open("http://localhost:10101/")
+                .expect("Could not open the browser, the server is still running though")
+        });
+    }
 
     fn respond(req: Request, res: Response<impl Read>) {
         if let Err(err) = req.respond(res) {
@@ -66,7 +101,12 @@ fn run_help_server() {
 }
 
 fn main() {
-    #[cfg(feature = "docs")]
-    run_help_server();
+    let opts = argh::from_env::<Opts>();
+
+    match opts.cmd {
+        SubCommand::Add(Nums { a, b }) => println!("{} + {} = {}", a, b, a + b),
+        #[cfg(feature = "docs")]
+        SubCommand::Help(helpopts) => run_help_server(helpopts),
+    }
 }
 
